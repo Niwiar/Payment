@@ -1,6 +1,7 @@
 import express, { Request, Response, NextFunction } from 'express';
 import { uid } from 'uid';
 import axios from 'axios';
+import { SCB_GEN_TOKEN, SCB_SANDBOX_ROOT } from '../constant';
 
 type TokenResponse = {
   status: { code: number; description: string };
@@ -19,7 +20,7 @@ export const getAccessToken = async (
 ) => {
   const response = await axios<TokenResponse>({
     method: 'post',
-    url: 'https://api-sandbox.partners.scb/partners/sandbox/v1/oauth/token',
+    url: `${SCB_SANDBOX_ROOT}${SCB_GEN_TOKEN}`,
     headers: {
       'Content-Type': 'application/json',
       'accept-language': 'en',

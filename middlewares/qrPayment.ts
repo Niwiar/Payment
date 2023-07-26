@@ -1,6 +1,7 @@
 import express, { Request, Response, NextFunction } from 'express';
 import { uid } from 'uid';
 import axios from 'axios';
+import { SCB_GEN_QR, SCB_SANDBOX_ROOT } from '../constant';
 
 type QrResponse = {
   status: { code: number; description: string };
@@ -16,9 +17,9 @@ export const createQrCode = async (
   next: NextFunction
 ) => {
   try {
-    const { data, status, statusText, headers } = await axios<QrResponse>({
+    const { data } = await axios<QrResponse>({
       method: 'post',
-      url: 'https://api-sandbox.partners.scb/partners/sandbox/v1/payment/qrcode/create',
+      url: `${SCB_SANDBOX_ROOT}${SCB_GEN_QR}`,
       headers: {
         'content-Type': 'application/json',
         requestUId: '1b01dff2-b3a3-4567-adde-cd9dd73c8b6d',
