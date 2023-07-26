@@ -7,20 +7,21 @@
   </head>
   <body>
     <input id="payAmount" type="number" value="1.00" />
-    <button id="getToken">Get Token</button>
-    <image id="qrImage" alt="QR Code Payment" />
+    <button id="getQR">Get QR</button>
+    <image id="qrImage" alt="QR Code Payment" hidden />
     <script
       src="https://code.jquery.com/jquery-3.7.0.min.js"
       integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
       crossorigin="anonymous"
     ></script>
     <script>
-      $('#getToken').on('click', async function () {
+      $('#getQR').on('click', async function () {
         const amount = $('#payAmount').val();
         const response = await fetch(`/api/payment`);
         const result = await response.json();
         console.log(result);
         $('#qrImage').attr('src', 'data:image/png;base64,' + result.qrImage);
+        $('#qrImage').removeAttr('hidden');
       });
     </script>
   </body>

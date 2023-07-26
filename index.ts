@@ -9,7 +9,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.get('/', async (req: Request, res: Response) => {
-  res.sendFile(__dirname + '/views/index.html');
+  res.sendFile(path.join(__dirname, 'views/index.html'));
 });
 
 import apiRoutes from './routes/api';
