@@ -13,9 +13,10 @@ app.get('/', async (req: Request, res: Response) => {
 });
 
 import apiRoutes from './routes/api';
+import hookRoutes from './routes/hook';
 
 app.use('/api', apiRoutes);
-app.use('/confirmation', apiRoutes);
+app.use('/hook', hookRoutes);
 
 app.listen(process.env.PORT || 3000, () => {
   console.log('Server running on port 3000');
