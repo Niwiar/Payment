@@ -17,7 +17,10 @@ export const socketServer = (server: http.Server) => {
 export const socketIO = () => {
   io.on('connection', (socket: Socket) => {
     console.log('A new client connected!');
-
+    socket.on('joinRoom', (room: string) => {
+      socket.join(room);
+      // socket.emit('checkConnect', `Welcome to Room ${room}`);
+    });
     // Listen for msg events from this client
     socket.on('msg', (msg: string) => {
       console.log(msg);
