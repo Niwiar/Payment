@@ -4,24 +4,80 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/sweetalert2.min.css" />
   </head>
   <body>
-    <input id="payAmount" type="number" value="1.00" />
-    <button id="getQR">Get QR</button>
-    <image id="qrImage" alt="QR Code Payment" hidden />
-    <script
-      src="https://code.jquery.com/jquery-3.7.0.min.js"
-      integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
-      crossorigin="anonymous"
-    ></script>
+    <div class="container">
+      <h2>Simple QR Payment</h2>
+      <div class="flex flex-col">
+        <input id="payAmount" type="number" value="1.00" />
+        <button id="getQR">Get QR</button>
+        <h5 id="countdown" class="inline"></h5>
+      </div>
+      <image id="qrImage" alt="QR Code Payment" hidden />
+    </div>
+
+    <script src="js/jquery.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="js/socket.io.min.js"></script>
+    <script src="js/sweetalert2.all.min.js"></script>
     <script>
-      $('#getQR').on('click', async function () {
+      const socketio = (room) => {
+        const TIMEOUT = 60;
+        let settimer;
+
+        const socket = io.connect('http://localhost:3000', {
+          reconnection: true,
+          reconnectionDelay: 1000,
+          reconnectionDelayMax: 5000,
+          reconnectionAttempts: 99999,
+        });
+
+        socket.on('connect', () => {
+          console.log('connected');
+          socket.emit('joinRoom', `${room}`);
+          // let time = TIMEOUT;
+          // setTimer = setInterval(() => {
+          //   let min = Math.floor(time / 60);
+          //   let sec = time % 60;
+          //   let timetext = min > 0 ? `${min}:${sec}` : `${sec}`;
+          //   $('#countdown').text(timetext);
+          //   console.log(time);
+          //   if (time == 0) {
+          //     clearInterval(setTimer);
+          //     Swal.fire({
+          //       title: 'Timeout',
+          //       text: 'Want to try again?',
+          //       icon: 'question',
+          //     });
+          //   }
+          //   time--;
+          // }, 1000);
+        });
+
+        socket.on('confirmPayment', (data) => {
+          // $('#countdown').empty();
+          // clearInterval(setTimer);
+          console.log(data.transactionDateandTime);
+          Swal.fire({
+            title: `Payment Success`,
+            text: 'Thank you for your payment',
+            icon: 'success',
+          });
+          socket.disconnect();
+        });
+      };
+      const fetchQR = async () => {
         const amount = $('#payAmount').val();
         const response = await fetch(`/api/payment`);
         const result = await response.json();
-        console.log(result);
         $('#qrImage').attr('src', 'data:image/png;base64,' + result.qrImage);
         $('#qrImage').removeAttr('hidden');
+        socketio(result.confirmationRoom);
+      };
+      $('#getQR').on('click', async function () {
+        await fetchQR();
       });
     </script>
   </body>

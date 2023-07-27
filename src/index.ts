@@ -5,6 +5,8 @@ dotenv.config();
 
 const app: Express = express();
 
+app.use(express.static(path.join(__dirname, 'assets')));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
@@ -18,6 +20,13 @@ import hookRoutes from './routes/hook';
 app.use('/api', apiRoutes);
 app.use('/hook', hookRoutes);
 
-app.listen(process.env.PORT || 3000, () => {
-  console.log('Server running on port 3000');
-});
+import http from 'http';
+import { socketIO, socketServer } from './libs/socket-io';
+
+const server = http.createServer(app);
+socketServer(server);
+server.listen(process.env.PORT || 3000, () =>
+  console.log('Server running on port 3000')
+);
+
+socketIO();

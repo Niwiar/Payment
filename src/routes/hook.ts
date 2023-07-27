@@ -1,14 +1,18 @@
 import express, { Router, Request, Response, NextFunction } from 'express';
 import { uid } from 'uid';
-import axios from 'axios';
-import { getAccessToken } from '../middlewares/auth';
-import { createQrCode } from '../middlewares/qrPayment';
+import { sendSocketToRoom } from '../libs/socket-io';
+import { encrypt } from '../libs/encrypt';
 
 const router: Router = express.Router();
 
 router.post('/payment_confirmation', async (req: Request, res: Response) => {
   console.log(req.body);
-  console.log(req.params);
+  const { transactionDateandTime, transactionId, billPaymentRef2 } = req.body;
+  sendSocketToRoom({
+    Room: encrypt(billPaymentRef2),
+    Key: 'confirmPayment',
+    Data: { transactionDateandTime },
+  });
   res.sendStatus(200);
 });
 

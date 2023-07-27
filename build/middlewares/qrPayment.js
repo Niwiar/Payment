@@ -13,10 +13,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createQrCode = void 0;
+const uid_1 = require("uid");
 const axios_1 = __importDefault(require("axios"));
 const constant_1 = require("../constant");
 const createQrCode = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        const ref2 = (0, uid_1.uid)(16).toUpperCase();
         const { data } = yield (0, axios_1.default)({
             method: 'post',
             url: `${constant_1.SCB_SANDBOX_ROOT}${constant_1.SCB_GEN_QR}`,
@@ -32,12 +34,13 @@ const createQrCode = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
                 ppType: 'BILLERID',
                 ppId: process.env.BILLER_ID,
                 ref1: 'PRIVAINNOTECH',
-                ref2: 'REFERENCE2',
+                ref2: ref2,
                 ref3: 'WXZ',
             },
         });
         res.locals.qrRawData = data.data.qrRawData;
         res.locals.qrImage = data.data.qrImage;
+        res.locals.ref2 = ref2;
         next();
     }
     catch (err) {

@@ -17,6 +17,7 @@ export const createQrCode = async (
   next: NextFunction
 ) => {
   try {
+    const ref2 = uid(16).toUpperCase();
     const { data } = await axios<QrResponse>({
       method: 'post',
       url: `${SCB_SANDBOX_ROOT}${SCB_GEN_QR}`,
@@ -32,12 +33,13 @@ export const createQrCode = async (
         ppType: 'BILLERID',
         ppId: process.env.BILLER_ID!,
         ref1: 'PRIVAINNOTECH',
-        ref2: 'REFERENCE2',
+        ref2: ref2,
         ref3: 'WXZ',
       },
     });
     res.locals.qrRawData = data.data.qrRawData;
     res.locals.qrImage = data.data.qrImage;
+    res.locals.ref2 = ref2;
     next();
   } catch (err: any) {
     console.log(err);

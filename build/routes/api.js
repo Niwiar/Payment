@@ -15,11 +15,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const auth_1 = require("../middlewares/auth");
 const qrPayment_1 = require("../middlewares/qrPayment");
+const encrypt_1 = require("../libs/encrypt");
 const router = express_1.default.Router();
 router.get('/payment', auth_1.getAccessToken, qrPayment_1.createQrCode, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(res.locals.qrRawData);
     res.locals.qrRawData
-        ? res.json({ qrImage: res.locals.qrImage })
+        ? res.json({
+            qrRawData: res.locals.qrRawData,
+            qrImage: res.locals.qrImage,
+            confirmationRoom: (0, encrypt_1.encrypt)(res.locals.ref2),
+        })
         : res.sendStatus(500);
 }));
 exports.default = router;
