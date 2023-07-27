@@ -2,11 +2,16 @@ import express, { Router, Request, Response, NextFunction } from 'express';
 import { uid } from 'uid';
 import { sendSocketToRoom, sendSocketToServer } from '../libs/socket-io';
 import { encrypt } from '../libs/encrypt';
+import logger from '../libs/logger';
 
 const router: Router = express.Router();
 
 router.post('/payment_confirmation', async (req: Request, res: Response) => {
-  const { transactionDateandTime, billPaymentRef2 } = req.body;
+  logger.debug(JSON.stringify(req.body));
+  const { transactionDateandTime, transactionId, billPaymentRef2 } = req.body;
+  logger.info(
+    `transaction confirm ${transactionId}: ${transactionDateandTime} ref ${billPaymentRef2}`
+  );
   const room = encrypt(billPaymentRef2);
   sendSocketToRoom({
     Room: room,
@@ -17,7 +22,7 @@ router.post('/payment_confirmation', async (req: Request, res: Response) => {
   //   Key: 'confirmPayment',
   //   Data: { transactionDateandTime, room },
   // });
-  res.sendStatus(200);
+  res.json({ resCode: '00', resDesc: 'success', transactionId: transactionId });
 });
 
 export default router;

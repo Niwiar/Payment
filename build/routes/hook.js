@@ -15,16 +15,23 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const socket_io_1 = require("../libs/socket-io");
 const encrypt_1 = require("../libs/encrypt");
+const logger_1 = __importDefault(require("../libs/logger"));
 const router = express_1.default.Router();
 router.post('/payment_confirmation', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(req.body);
+    logger_1.default.debug(JSON.stringify(req.body));
     const { transactionDateandTime, transactionId, billPaymentRef2 } = req.body;
+    logger_1.default.info(`transaction confirm ${transactionId}: ${transactionDateandTime} ref ${billPaymentRef2}`);
+    const room = (0, encrypt_1.encrypt)(billPaymentRef2);
     (0, socket_io_1.sendSocketToRoom)({
-        Room: (0, encrypt_1.encrypt)(billPaymentRef2),
+        Room: room,
         Key: 'confirmPayment',
-        Data: { transactionDateandTime },
+        Data: { transactionDateandTime, room },
     });
-    res.sendStatus(200);
+    // sendSocketToServer({
+    //   Key: 'confirmPayment',
+    //   Data: { transactionDateandTime, room },
+    // });
+    res.json({ resCode: '00', resDesc: 'success', transactionId: transactionId });
 }));
 exports.default = router;
 // {

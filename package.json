@@ -24,7 +24,8 @@
     "sweetalert2": "^11.7.20",
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",
-    "uid": "^2.0.2"
+    "uid": "^2.0.2",
+    "winston": "^3.10.0"
   },
   "devDependencies": {
     "@types/express": "^4.17.17",
