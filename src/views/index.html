@@ -37,7 +37,8 @@
 
         socket.on('connect', () => {
           console.log('connected');
-          socket.emit('joinRoom', `${room}`);
+          console.log(room);
+          socket.emit('joinRoom', room);
           // let time = TIMEOUT;
           // setTimer = setInterval(() => {
           //   let min = Math.floor(time / 60);

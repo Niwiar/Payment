@@ -1,6 +1,6 @@
 import express, { Router, Request, Response, NextFunction } from 'express';
 import { uid } from 'uid';
-import { sendSocketToRoom } from '../libs/socket-io';
+import { sendSocketToRoom, sendSocketToServer } from '../libs/socket-io';
 import { encrypt } from '../libs/encrypt';
 
 const router: Router = express.Router();
@@ -8,8 +8,12 @@ const router: Router = express.Router();
 router.post('/payment_confirmation', async (req: Request, res: Response) => {
   const { transactionDateandTime, billPaymentRef2 } = req.body;
   const room = encrypt(billPaymentRef2);
-  sendSocketToRoom({
-    Room: room,
+  // sendSocketToRoom({
+  //   Room: room,
+  //   Key: 'confirmPayment',
+  //   Data: { transactionDateandTime, room },
+  // });
+  sendSocketToServer({
     Key: 'confirmPayment',
     Data: { transactionDateandTime, room },
   });
