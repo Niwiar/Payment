@@ -6,12 +6,12 @@ import { encrypt } from '../libs/encrypt';
 const router: Router = express.Router();
 
 router.post('/payment_confirmation', async (req: Request, res: Response) => {
-  console.log(req.body);
   const { transactionDateandTime, billPaymentRef2 } = req.body;
+  const room = encrypt(billPaymentRef2);
   sendSocketToRoom({
-    Room: encrypt(billPaymentRef2),
+    Room: room,
     Key: 'confirmPayment',
-    Data: { transactionDateandTime },
+    Data: { transactionDateandTime, room },
   });
   res.sendStatus(200);
 });
