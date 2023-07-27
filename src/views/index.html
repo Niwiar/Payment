@@ -27,7 +27,7 @@
         const TIMEOUT = 60;
         let settimer;
 
-        const socket = io.connect('http://localhost:3000', {
+        const socket = io.connect(socketHost, {
           reconnection: true,
           reconnectionDelay: 1000,
           reconnectionDelayMax: 5000,

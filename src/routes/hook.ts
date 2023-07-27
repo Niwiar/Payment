@@ -7,7 +7,7 @@ const router: Router = express.Router();
 
 router.post('/payment_confirmation', async (req: Request, res: Response) => {
   console.log(req.body);
-  const { transactionDateandTime, transactionId, billPaymentRef2 } = req.body;
+  const { transactionDateandTime, billPaymentRef2 } = req.body;
   sendSocketToRoom({
     Room: encrypt(billPaymentRef2),
     Key: 'confirmPayment',
